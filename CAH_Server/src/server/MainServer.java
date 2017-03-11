@@ -7,6 +7,8 @@ package server;
 
 import java.net.*;
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -88,8 +90,17 @@ public class MainServer {
 
             //Envoyer le numéro de la connection au client
             this.envoyer(String.valueOf(num), num);
+            //this.envoyer("Bienvenue sur le serveur",num);
 
             nbConnexions++;
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            for (int z = 0; z <= nbConnexions; z++) {
+                            this.envoyer((nbConnexions+1)+" joueurs connectés (dont vous)", z);
+                    }
             
             //Message à l'usager
             System.out.println("Connexion " + num
