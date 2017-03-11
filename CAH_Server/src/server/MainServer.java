@@ -99,8 +99,8 @@ public class MainServer {
                 Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
             }
             for (int z = 0; z <= nbConnexions; z++) {
-                            this.envoyer((nbConnexions+1)+" joueurs connectés (dont vous)", z);
-                    }
+                this.envoyer((nbConnexions+1)+" joueurs connectés (dont vous)", z);
+                }
             
             //Message à l'usager
             System.out.println("Connexion " + num
@@ -156,6 +156,10 @@ public class MainServer {
                                 is[provenance] = null;
                                 os[provenance] = null;
                                 connexions[provenance] = null;
+                                nbConnexions--;
+                                for (int z = 0; z <= nbConnexions; z++) {
+                                    this.envoyer((nbConnexions+1)+" joueurs connectés (dont vous)", z);
+                                }
                                 System.out.println("TODO : Deconnecter " + texte);
                             } catch (Exception x) {
                                 x.printStackTrace();
