@@ -84,6 +84,7 @@ public class Client extends Observable {
     public void envoyer(String message) {
         if (message.indexOf(" ")==-1){
             message+=" ";
+            System.out.println("'"+message+"'");
         }
         os.print(String.valueOf(numConnexion) + "|" + alias + ">>" + message);
         os.flush();

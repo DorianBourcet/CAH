@@ -113,7 +113,7 @@ public class MainServer {
                 if (is[i] != null && is[i].available() > 0) {
                     //Oui, lire le socket
                     is[i].read(buf);
-                    texte = (new String(buf)).trim();
+                    texte = new String(buf);
                     System.out.println("Recu : "+texte);
                     //Déterminer la provenance (voir la méthode envoyer() du client):
                     provenance = Integer.parseInt(texte.substring(0, texte.indexOf("|")));
@@ -124,6 +124,7 @@ public class MainServer {
                     } else {
                         commande = " ";
                     }
+                    System.out.println("commande "+commande);
                     switch(commande){
                         case "CHAT":
                             String msg = texte.substring(texte.indexOf(" ")+1);
