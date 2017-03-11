@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cah_server;
+package server;
 
 import java.net.*;
 import java.io.*;
@@ -12,7 +12,7 @@ import java.io.*;
  *
  * @author d.bourcet
  */
-public class CAH_Server {
+public class MainServer {
 
     private ServerSocket serveurSock;
     private int port;
@@ -23,11 +23,11 @@ public class CAH_Server {
     private BufferedInputStream[] is = new BufferedInputStream[maxConnexions];
     private VerifierServeur vt;
     
-    public CAH_Server(int p) {
+    public MainServer(int p) {
         port = p;
     }
 
-    public CAH_Server() {
+    public MainServer() {
         this(5555);
     }
 
@@ -113,51 +113,61 @@ public class CAH_Server {
                 if (is[i] != null && is[i].available() > 0) {
                     //Oui, lire le socket
                     is[i].read(buf);
-                    texte = (new String(buf)).trim();
-
+                    texte = new String(buf);
+                    System.out.println("Recu : "+texte);
                     //Déterminer la provenance (voir la méthode envoyer() du client):
                     provenance = Integer.parseInt(texte.substring(0, texte.indexOf("|")));
-
-                    for (int z = 0; z <= nbConnexions; z++) {
-                        //Ne pas renvoyer le message à l'expéditeur
-                        if (z != provenance) {
-                            this.envoyer(texte.substring(texte.indexOf("|") + 1), z);
-                        }
+                    String alias = texte.substring(texte.indexOf("|")+1,texte.indexOf(">>"));
+                    String commande;
+                    if (texte.indexOf(" ")!=-1) {
+                        commande = texte.substring(texte.indexOf(">>")+2,texte.indexOf(" "));
+                    } else {
+                        commande = " ";
                     }
-
-                    //Vérifier si le client a demandé une déconnexion :
-                    String msg = texte.substring(texte.indexOf(">>") + 2);
-                    if (msg.equals("STOP")) {
-                        try {
-                            is[provenance].close();
-                            os[provenance].close();
-                            connexions[provenance].close();
-                            is[provenance] = null;
-                            os[provenance] = null;
-                            connexions[provenance] = null;
-                            System.out.println("TODO : Deconnecter " + texte);
-                        } catch (Exception x) {
-                            x.printStackTrace();
-                        }
+                    System.out.println("commande "+commande);
+                    switch(commande){
+                        case "CHAT":
+                            String msg = texte.substring(texte.indexOf(" ")+1);
+                            for (int z = 0; z <= nbConnexions; z++) {
+                                if (z != provenance) {
+                                    this.envoyer(alias+">>"+msg, z);
+                                }
+                            }
+                            break;
+                        case "START":
+                            // À FAIRE
+                            break;
+                        case "STOP":
+                            try {
+                                is[provenance].close();
+                                os[provenance].close();
+                                connexions[provenance].close();
+                                is[provenance] = null;
+                                os[provenance] = null;
+                                connexions[provenance] = null;
+                                System.out.println("TODO : Deconnecter " + texte);
+                            } catch (Exception x) {
+                                x.printStackTrace();
+                            }
+                            break;
+                        default:
                     }
-
                     //Effacer le buffer
                     buf = null;
-
                 }
             }
         } catch (IOException e) {
         }
     }
     public static void main(String[] args) {
-        CAH_Server serveur = new CAH_Server();
+        MainServer serveur = new MainServer();
         serveur.connecter();
     }
 }
 
 class VerifierServeur extends Thread {
-    CAH_Server ref;
-    public VerifierServeur(CAH_Server cs) {
+    MainServer ref;
+    public VerifierServeur(MainServer cs) {
         ref = cs;
     }
     public void run() {
@@ -173,8 +183,8 @@ class VerifierServeur extends Thread {
 }
 
 class VerifierConnexion extends Thread {
-    CAH_Server ref;
-    public VerifierConnexion(CAH_Server cs) {
+    MainServer ref;
+    public VerifierConnexion(MainServer cs) {
         ref = cs;
     }
     public void run() {
