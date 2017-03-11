@@ -150,6 +150,14 @@ public class MainServer {
                                 x.printStackTrace();
                             }
                             break;
+                        case "HELP":
+                            String help = "=== HELP ===\n"
+                                    + "Available commands\n"
+                                    + " - START to start a game\n"
+                                    + " - CHAT and your message to chat with connected players\n"
+                                    + " - STOP to close your connection to the game\n";
+                            this.envoyer(help, provenance);
+                            break;
                         default:
                     }
                     //Effacer le buffer
