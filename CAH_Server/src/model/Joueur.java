@@ -57,5 +57,4 @@ public class Joueur {
         this.blanches = blanches;
     }
     
-    
 }
