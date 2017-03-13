@@ -21,6 +21,10 @@ public class MainServer {
     private final int maxConnexions = 100;
     private Socket[] connexions = new Socket[maxConnexions];
     private int nbConnexions = -1;
+    
+    private int[] joueurStart = new int[100];
+    private int nbrJoueurStart = 0;
+    
     private PrintWriter[] os = new PrintWriter[maxConnexions];
     private BufferedInputStream[] is = new BufferedInputStream[maxConnexions];
     private VerifierServeur vt;
@@ -110,7 +114,13 @@ public class MainServer {
             System.out.println(e);
         }
     }
-    
+    public boolean verifyListStartJoueur(int provenance){
+        if (nbrJoueurStart==0) return false;
+        for (int l = 0; l <= nbrJoueurStart; l++) {
+            if (joueurStart[l] == provenance) return true;
+        }
+        return false;
+    }
     public void lire() {
         try {
             //buffer de lecture
@@ -147,9 +157,30 @@ public class MainServer {
                             break;
                         case "START":
                             // À FAIRE
+                            if (nbConnexions+1 >= 3) {
+                                for (int z = 0; z <= nbConnexions; z++) {
+                                    if (z != provenance) {
+                                        this.envoyer((nbrJoueurStart)+" joueurs veuillent commencer la partie."
+                                                +"\n"+ " Veuillez inscrire START.", z);
+                                    } else {
+                                        this.envoyer("Demande de confirmation des autres joueurs...", provenance);
+                                        if (verifyListStartJoueur(provenance) == false){
+                                            nbrJoueurStart++;
+                                            for (int k = 0; k <= nbrJoueurStart; k++) {
+                                                if (joueurStart[k] == 0) joueurStart[k] = provenance;
+                                            }
+                                        }  
+                                    }
+                                }
+                            }else this.envoyer("Pas asser de joueurs en ligne.", provenance);
+                            
                             break;
                         case "STOP":
                             try {
+                                for (int z = 0; z <= nbrJoueurStart; z++) {
+                                    if (joueurStart[nbrJoueurStart] == provenance) joueurStart[nbrJoueurStart] = 0;
+                                    nbrJoueurStart--;
+                                }
                                 is[provenance].close();
                                 os[provenance].close();
                                 connexions[provenance].close();
@@ -157,6 +188,7 @@ public class MainServer {
                                 os[provenance] = null;
                                 connexions[provenance] = null;
                                 nbConnexions--;
+                                
                                 for (int z = 0; z <= nbConnexions; z++) {
                                     this.envoyer((nbConnexions+1)+" joueurs connectés (dont vous)", z);
                                 }
