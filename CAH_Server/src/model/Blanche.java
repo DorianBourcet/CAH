@@ -14,17 +14,11 @@ import java.io.Serializable;
 public class Blanche implements Serializable {
     private int idJoueur;
     private String texte;
-    private Boolean jouee = false;
 
     public Blanche(int idJoueur, String texte) {
         this.idJoueur = idJoueur;
         this.texte = texte;
     }
-
-    public Blanche(String texte) {
-        this.texte = texte;
-    }
-    
     public Blanche() {
         this(-1,"");
     }
@@ -43,18 +37,6 @@ public class Blanche implements Serializable {
 
     public void setTexte(String texte) {
         this.texte = texte;
-    }
-
-    public Boolean isJouee() {
-        return jouee;
-    }
-
-    public void setJouee(Boolean jouee) {
-        this.jouee = jouee;
-    }
-    
-    public String toString() {
-        return this.texte;
     }
     
 }

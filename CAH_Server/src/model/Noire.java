@@ -14,25 +14,15 @@ import java.io.Serializable;
 public class Noire implements Serializable {
     private int idJoueur;
     private String texte;
-    private int piger;
+    private String piger;
 
-    public Noire(int joueur, String texte, int piger) {
+    public Noire(int joueur, String texte, String piger) {
         this.idJoueur = joueur;
         this.texte = texte;
         this.piger = piger;
     }
-
-    public Noire(String texte, int piger) {
-        this.texte = texte;
-        this.piger = piger;
-    }
-    
     public Noire() {
-        this(-1,"",-1);
-    }
-
-    public Noire(String texte) {
-        this.texte = texte;
+        this(-1,"","");
     }
 
     public String getTexte() {
@@ -43,11 +33,11 @@ public class Noire implements Serializable {
         this.texte = texte;
     }
 
-    public int getPiger() {
+    public String getPiger() {
         return piger;
     }
 
-    public void setPiger(int piger) {
+    public void setPiger(String piger) {
         this.piger = piger;
     }
 
@@ -62,5 +52,4 @@ public class Noire implements Serializable {
     public String toString(){
         return "TEXTE : "+this.texte+"\nPIGER : "+this.piger;
     }
-    
 }
