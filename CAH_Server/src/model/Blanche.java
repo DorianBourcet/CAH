@@ -5,11 +5,13 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author soixa
  */
-public class Blanche {
+public class Blanche implements Serializable {
     private int idJoueur;
     private String texte;
 

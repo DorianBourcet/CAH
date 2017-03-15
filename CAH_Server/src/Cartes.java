@@ -21,6 +21,8 @@ import model.Noire;
  *
  * @author soixa
  */
+
+// Permet d'obtenir les cartes depuis les fichiers txt du dossier resources.
 public class Cartes {
     public static ArrayList listeBlanches = new ArrayList();
     public static ArrayList listeNoires = new ArrayList();

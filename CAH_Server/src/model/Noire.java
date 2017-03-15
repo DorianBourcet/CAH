@@ -5,11 +5,13 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author soixa
  */
-public class Noire {
+public class Noire implements Serializable {
     private int idJoueur;
     private String texte;
     private String piger;
@@ -47,4 +49,7 @@ public class Noire {
         this.idJoueur = idJoueur;
     }
     
+    public String toString(){
+        return "TEXTE : "+this.texte+"\nPIGER : "+this.piger;
+    }
 }
