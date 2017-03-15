@@ -5,6 +5,8 @@
  */
 package model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -13,13 +15,21 @@ import java.util.List;
  *
  * @author soixa
  */
-public class Joueur {
+public class Joueur implements Serializable {
     
     private String alias;
     private int provenance;
-    private List<Blanche> blanches;
+    private int score = 0;
+    private ArrayList<Blanche> blanches;
 
-    public Joueur(String alias, int provenance, List<Blanche> blanches) {
+    public Joueur(String alias, int provenance, int score, ArrayList<Blanche> blanches) {
+        this.alias = alias;
+        this.provenance = provenance;
+        this.blanches = blanches;
+        this.score = score;
+    }
+    
+    public Joueur(String alias, int provenance, ArrayList<Blanche> blanches) {
         this.alias = alias;
         this.provenance = provenance;
         this.blanches = blanches;
@@ -49,12 +59,39 @@ public class Joueur {
         this.provenance = provenance;
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     public List<Blanche> getBlanches() {
         return blanches;
     }
 
-    public void setBlanches(List<Blanche> blanches) {
+    public void setBlanches(ArrayList<Blanche> blanches) {
         this.blanches = blanches;
     }
     
+    public Boolean addBlanche(Blanche bl){
+        return this.blanches.add(bl);
+    }
+    
+    public Boolean deleteBlanche(Blanche bl){
+        return this.blanches.remove(bl);
+    }
+    
+    public int getNombreBlanches(){
+        return this.blanches.size();
+    }
+    
+    public int incrementerScore(){
+        return ++score;
+    }
+    
+    public String toString(){
+        return ""+this.score;
+    }
 }

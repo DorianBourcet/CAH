@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import model.Joueur;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,8 +19,11 @@ public class Test {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        ArrayList test = Cartes.getNoiresFromTxt();
-        System.out.println(Cartes.listeNoires.get(5).toString());
+        //ArrayList test = Cartes.getNoiresFromTxt();
+        //System.out.println(Cartes.listeNoires.get(5).toString());
+        Joueur j1 = new Joueur();
+        System.out.println(j1.incrementerScore());
+        System.out.println(j1.toString());
     }
     
 }
