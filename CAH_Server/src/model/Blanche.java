@@ -12,23 +12,14 @@ import java.io.Serializable;
  * @author soixa
  */
 public class Blanche implements Serializable {
-    private int idJoueur;
     private String texte;
 
-    public Blanche(int idJoueur, String texte) {
-        this.idJoueur = idJoueur;
+    public Blanche(String texte){
         this.texte = texte;
     }
+    
     public Blanche() {
-        this(-1,"");
-    }
-
-    public int getIdJoueur() {
-        return idJoueur;
-    }
-
-    public void setIdJoueur(int idJoueur) {
-        this.idJoueur = idJoueur;
+        this("");
     }
 
     public String getTexte() {
