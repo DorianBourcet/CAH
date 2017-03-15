@@ -75,7 +75,7 @@ public class Joueur implements Serializable {
         this.blanches = blanches;
     }
     
-    public Boolean addBlanche(Blanche bl){
+    public Boolean ajouterBlanche(Blanche bl){
         return this.blanches.add(bl);
     }
     

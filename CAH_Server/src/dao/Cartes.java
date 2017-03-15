@@ -1,3 +1,5 @@
+package dao;
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,6 +30,7 @@ public class Cartes {
     public static ArrayList listeNoires = new ArrayList();
     
     public static ArrayList getBlanchesFromTxt(){
+        listeBlanches.clear();
         String line;
         try {
             FileInputStream fis = new FileInputStream(new File("./resources/blanches.txt"));
