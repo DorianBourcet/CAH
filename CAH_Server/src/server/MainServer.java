@@ -7,6 +7,7 @@ package server;
 
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,14 +16,13 @@ import java.util.logging.Logger;
  * @author d.bourcet
  */
 public class MainServer {
-
     private ServerSocket serveurSock;
     private int port;
     private final int maxConnexions = 100;
     private Socket[] connexions = new Socket[maxConnexions];
     private int nbConnexions = -1;
     
-    private int[] joueurStart = new int[100];
+    private ArrayList joueurStart = new ArrayList();
     private int nbrJoueurStart = 0;
     
     private PrintWriter[] os = new PrintWriter[maxConnexions];
@@ -114,13 +114,13 @@ public class MainServer {
             System.out.println(e);
         }
     }
-    public boolean verifyListStartJoueur(int provenance){
+    /*public boolean verifyListStartJoueur(int provenance){
         if (nbrJoueurStart==0) return false;
         for (int l = 0; l <= nbrJoueurStart; l++) {
             if (joueurStart[l] == provenance) return true;
         }
         return false;
-    }
+    }*/
     public void lire() {
         try {
             //buffer de lecture
@@ -156,31 +156,35 @@ public class MainServer {
                             }
                             break;
                         case "START":
-                            // À FAIRE
                             if (nbConnexions+1 >= 3) {
+                                //System.out.println(""+joueurStart.length);
+                                if (joueurStart.indexOf(provenance)==-1){
+                                    joueurStart.add(provenance);
+                                    nbrJoueurStart++;
+                                    this.envoyer("Demande de confirmation des autres joueurs...", provenance);
+                                    /*for (int k = 0; k <= nbrJoueurStart; k++) {
+                                        if (joueurStart[k] == 0) joueurStart[k] = provenance;
+                                    }*/
+                                }
                                 for (int z = 0; z <= nbConnexions; z++) {
                                     if (z != provenance) {
-                                        this.envoyer((nbrJoueurStart)+" joueurs veuillent commencer la partie."
+                                        if (joueurStart.indexOf(z)!=-1){
+                                            this.envoyer("Un nouveau joueur vient d'accepter",z);
+                                        } else {
+                                            this.envoyer((nbrJoueurStart)+" joueurs veulent commencer la partie."
                                                 +"\n"+ " Veuillez inscrire START.", z);
-                                    } else {
-                                        this.envoyer("Demande de confirmation des autres joueurs...", provenance);
-                                        if (verifyListStartJoueur(provenance) == false){
-                                            nbrJoueurStart++;
-                                            for (int k = 0; k <= nbrJoueurStart; k++) {
-                                                if (joueurStart[k] == 0) joueurStart[k] = provenance;
-                                            }
-                                        }  
+                                        }
                                     }
                                 }
-                            }else this.envoyer("Pas asser de joueurs en ligne.", provenance);
+                            }else this.envoyer("Pas assez de joueurs en ligne.", provenance);
                             
                             break;
                         case "STOP":
                             try {
-                                for (int z = 0; z <= nbrJoueurStart; z++) {
+                                /*for (int z = 0; z <= nbrJoueurStart; z++) {
                                     if (joueurStart[nbrJoueurStart] == provenance) joueurStart[nbrJoueurStart] = 0;
                                     nbrJoueurStart--;
-                                }
+                                }*/
                                 is[provenance].close();
                                 os[provenance].close();
                                 connexions[provenance].close();
