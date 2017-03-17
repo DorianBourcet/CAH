@@ -21,9 +21,12 @@ public class Test {
         // TODO code application logic here
         //ArrayList test = Cartes.getNoiresFromTxt();
         //System.out.println(Cartes.listeNoires.get(5).toString());
-        Joueur j1 = new Joueur();
-        System.out.println(j1.incrementerScore());
-        System.out.println(j1.toString());
+        //Joueur j1 = new Joueur();
+        //System.out.println(j1.incrementerScore());
+        //System.out.println(j1.toString());
+        ArrayList test = new ArrayList();
+        test.add(5);
+        System.out.println(test.indexOf(6));
     }
     
 }
