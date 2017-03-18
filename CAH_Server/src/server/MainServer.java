@@ -19,14 +19,17 @@ public class MainServer {
     private ServerSocket serveurSock;
     private int port;
     private final int maxConnexions = 100;
-    private Socket[] connexions = new Socket[maxConnexions];
+    //private Socket[] connexions = new Socket[maxConnexions];
+    private ArrayList connexions = new ArrayList();
     private int nbConnexions = -1;
     
     private ArrayList joueurStart = new ArrayList();
     private int nbrJoueurStart = 0;
     
-    private PrintWriter[] os = new PrintWriter[maxConnexions];
-    private BufferedInputStream[] is = new BufferedInputStream[maxConnexions];
+    //private PrintWriter[] os = new PrintWriter[maxConnexions];
+    private ArrayList os = new ArrayList();
+    //private BufferedInputStream[] is = new BufferedInputStream[maxConnexions];
+    private ArrayList is = new ArrayList();
     private VerifierServeur vt;
     
     public MainServer(int p) {
@@ -46,11 +49,11 @@ public class MainServer {
     }
     
     private void envoyer(String msg, int i) {
-        if (os[i] == null) {
+        if (os.get(i) == null) {
             return;
         }
-        os[i].print(msg);
-        os[i].flush();
+        ((PrintWriter)os.get(i)).print(msg);
+        ((PrintWriter)os.get(i)).flush();
     }
     
     private void connecter() {
@@ -79,11 +82,11 @@ public class MainServer {
             Socket sk = serveurSock.accept();
 
             //Mémorisation de la connection
-            connexions[num] = sk;
+            connexions.add(num,sk);
 
             //Initialisation des entrées/sorties :
-            os[num] = new PrintWriter(connexions[num].getOutputStream());
-            is[num] = new BufferedInputStream(connexions[num].getInputStream());
+            os.add(num,new PrintWriter(((Socket)connexions.get(num)).getOutputStream()));
+            is.add(num,new BufferedInputStream(((Socket)connexions.get(num)).getInputStream()));
 
             //Première connection?
             if (num == 0) {
@@ -128,12 +131,12 @@ public class MainServer {
             String texte;
             int provenance; //provenance du texte
 
-            //Lire toutes les connections
+            //Lire toutes les connexions
             for (int i = 0; i <= nbConnexions; i++) {
                 //La connection est-elle active?
-                if (is[i] != null && is[i].available() > 0) {
+                if (is.get(i) != null && ((BufferedInputStream)is.get(i)).available() > 0) {
                     //Oui, lire le socket
-                    is[i].read(buf);
+                    ((BufferedInputStream)is.get(i)).read(buf);
                     texte = new String(buf);
                     System.out.println("Recu : "+texte);
                     //Déterminer la provenance (voir la méthode envoyer() du client):
@@ -157,22 +160,31 @@ public class MainServer {
                             break;
                         case "START":
                             if (nbConnexions+1 >= 3) {
-                                //System.out.println(""+joueurStart.length);
                                 if (joueurStart.indexOf(provenance)==-1){
                                     joueurStart.add(provenance);
                                     nbrJoueurStart++;
-                                    this.envoyer("Demande de confirmation des autres joueurs...", provenance);
+                                    System.out.println("length connexions : "+connexions.size());
+                                    System.out.println("joueurStart.size() "+joueurStart.size());
+                                    if (connexions.size() == joueurStart.size()){
+                                        this.envoyer("Il ne manquait plus que vous ! Partie démarrée !",provenance);
+                                    } else {
+                                        this.envoyer("Demande de confirmation des autres joueurs...", provenance);
+                                    }
                                     /*for (int k = 0; k <= nbrJoueurStart; k++) {
                                         if (joueurStart[k] == 0) joueurStart[k] = provenance;
                                     }*/
                                 }
                                 for (int z = 0; z <= nbConnexions; z++) {
                                     if (z != provenance) {
-                                        if (joueurStart.indexOf(z)!=-1){
+                                        if (connexions.size() == joueurStart.size()){
+                                            this.envoyer("Tout le monde est là :) Partie démarrée", z);
+                                        } else {
+                                            if (joueurStart.indexOf(z)!=-1){
                                             this.envoyer("Un nouveau joueur vient d'accepter",z);
                                         } else {
                                             this.envoyer((nbrJoueurStart)+" joueurs veulent commencer la partie."
                                                 +"\n"+ " Veuillez inscrire START.", z);
+                                        }
                                         }
                                     }
                                 }
@@ -185,12 +197,12 @@ public class MainServer {
                                     if (joueurStart[nbrJoueurStart] == provenance) joueurStart[nbrJoueurStart] = 0;
                                     nbrJoueurStart--;
                                 }*/
-                                is[provenance].close();
-                                os[provenance].close();
-                                connexions[provenance].close();
-                                is[provenance] = null;
-                                os[provenance] = null;
-                                connexions[provenance] = null;
+                                ((BufferedInputStream)is.get(provenance)).close();
+                                ((PrintWriter)os.get(provenance)).close();
+                                ((Socket)connexions.get(provenance)).close();
+                                is.set(provenance,null);
+                                os.set(provenance,null);
+                                connexions.set(provenance,null);
                                 nbConnexions--;
                                 
                                 for (int z = 0; z <= nbConnexions; z++) {
