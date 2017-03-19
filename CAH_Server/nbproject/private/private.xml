@@ -3,16 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
             <file>file:/C:/Users/soixa/Documents/GitHub/CardsAgainstHumanity/CAH/CAH_Server/src/Test.java</file>
             <file>file:/C:/Users/soixa/Documents/GitHub/CardsAgainstHumanity/CAH/CAH_Server/src/server/MainServer.java</file>
-=======
-            <file>file:/C:/Users/jcf_1/Desktop/CAH/CAH_Server/src/model/Proposition.java</file>
-            <file>file:/C:/Users/jcf_1/Desktop/CAH/CAH_Server/src/dao/Cartes.java</file>
-            <file>file:/C:/Users/jcf_1/Desktop/CAH/CAH_Server/src/server/MainServer.java</file>
-            <file>file:/C:/Users/jcf_1/Desktop/CAH/CAH_Server/src/model/Partie.java</file>
-            <file>file:/C:/Users/jcf_1/Desktop/CAH/CAH_Server/src/model/Joueur.java</file>
->>>>>>> 401deb54e8d8cfe5e544fd4abb5296d83681b552
+            <file>file:/C:/Users/soixa/Documents/GitHub/CardsAgainstHumanity/CAH/CAH_Server/src/model/Partie.java</file>
+            <file>file:/C:/Users/soixa/Documents/GitHub/CardsAgainstHumanity/CAH/CAH_Server/src/model/Proposition.java</file>
+            <file>file:/C:/Users/soixa/Documents/GitHub/CardsAgainstHumanity/CAH/CAH_Server/src/model/Joueur.java</file>
+            <file>file:/C:/Users/soixa/Documents/GitHub/CardsAgainstHumanity/CAH/CAH_Server/src/model/Noire.java</file>
         </group>
     </open-files>
 </project-private>

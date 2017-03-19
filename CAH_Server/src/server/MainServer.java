@@ -8,6 +8,7 @@ package server;
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 //============================== Peut-etre pas necessaire
@@ -22,11 +23,11 @@ import model.Partie;
 public class MainServer {
     private ServerSocket serveurSock;
     private int port;
-    private final int maxConnexions = 100;
+    //private final int maxConnexions = 100;
     //private Socket[] connexions = new Socket[maxConnexions];
     private ArrayList connexions = new ArrayList();
     private int nbConnexions = -1;
-    
+    private HashMap listeAlias = new HashMap();
     private ArrayList joueurStart = new ArrayList();
     private int nbrJoueurStart = 0;
     
@@ -149,6 +150,8 @@ public class MainServer {
                     //Déterminer la provenance (voir la méthode envoyer() du client):
                     provenance = Integer.parseInt(texte.substring(0, texte.indexOf("|")));
                     String alias = texte.substring(texte.indexOf("|")+1,texte.indexOf(">>"));
+                    listeAlias.put(provenance,alias);
+                    System.out.println(listeAlias.get(provenance));
                     String commande;
                     if (texte.indexOf(" ")!=-1) {
                         commande = texte.substring(texte.indexOf(">>")+2,texte.indexOf(" "));
