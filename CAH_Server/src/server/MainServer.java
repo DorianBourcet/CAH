@@ -10,6 +10,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+//============================== Peut-etre pas necessaire
+import model.Joueur;
+//==============================
+import model.Partie;
 
 /**
  *
@@ -31,6 +35,9 @@ public class MainServer {
     //private BufferedInputStream[] is = new BufferedInputStream[maxConnexions];
     private ArrayList is = new ArrayList();
     private VerifierServeur vt;
+    
+    private boolean partieCommencer = false;
+    private Partie partie;
     
     public MainServer(int p) {
         port = p;
@@ -149,6 +156,14 @@ public class MainServer {
                         commande = " ";
                     }
                     System.out.println("commande "+commande);
+                    
+                    
+                    //Si la partie est commencé, Logique du jeux ici
+                    if (partieCommencer == true){
+                        //TODO
+                    }
+                    
+                    
                     switch(commande){
                         case "CHAT":
                             String msg = texte.substring(texte.indexOf(" ")+1);
@@ -223,6 +238,10 @@ public class MainServer {
                             break;
                         default:
                     }
+                    //Initialisation d'une partie
+                    if (connexions.size() == joueurStart.size() && partieCommencer == false){
+                        initiatePartie();
+                    }
                     //Effacer le buffer
                     buf = null;
                 }
@@ -233,6 +252,31 @@ public class MainServer {
     public static void main(String[] args) {
         MainServer serveur = new MainServer();
         serveur.connecter();
+    }
+
+    private void initiatePartie() {
+        partieCommencer = true;
+        partie = new Partie(joueurStart.size());
+        //TODO Méthode pour inséré les joueurs de la room dans la partie
+        //idée 1: Une boucle for qui met les joueurs un par un avec une methode setJoueur(Joueur player)
+        //idée 2: une méthode qui prend un tableau de joueur et qui set les joueurs de la room à la partie avec un méthode setJoueurs(Joueur[] ou arraylist)
+        partie.melangeCartes();
+        partie.ordreInitiate();
+        partie.distribuerCartes();
+        //voir getCurrentJoueur pour le retour
+        Joueur currentJoueur = partie.getCurrentJoueur();
+        this.broadcast("Vous êtes le premier joueur à piger une carte noir!", currentJoueur.getAlias()+" est le premier joueur à piger une carte noir!", currentJoueur.getProvenance());
+    }
+    private void broadcast(String message){
+        for (int z = 0; z <= joueurStart.size(); z++) {
+            this.envoyer(message, z);
+        }
+    }
+    private void broadcast(String messageAll, String messageProvenance, int provenance){
+        for (int z = 0; z <= joueurStart.size(); z++) {
+            if(provenance== z) this.envoyer(messageProvenance, z);
+            else this.envoyer(messageAll, z);
+        }
     }
 }
 
