@@ -22,7 +22,10 @@ public class Partie {
     private ArrayList propositions = new ArrayList();
     private int nbCartesParJoueur = 10;
 
-    public Partie() {
+    
+    //Crée une partie avec le nombre de joueur
+    public Partie(int nbrJoueur) {
+        tabJoueur = new Joueur[nbrJoueur];
     }
    
     public void melangeCartes(){
@@ -105,7 +108,11 @@ public class Partie {
         /*for (int i=0;i<tabJoueur.length;i++){
             if (((Joueur)stackTourJoueur.peek()).getProvenance()==tabJoueur[i].getProvenance()) return tabJoueur[i];
         }*/
+        //Peut-etre juste retourné le nom du joueur au lieu de l'objet joueur??
         return (Joueur)stackTourJoueur.peek();
+    }
+    public void setJoueur(){
+        //TODO Prend les joueur de la room et l'insère dans la partie
     }
     
 }
