@@ -40,6 +40,14 @@ public class Partie {
             i++;
         }
     }
+    
+    public Joueur getJoueur(int provenance){
+        for (int i=0;i<tabJoueur.length;i++){
+            if (tabJoueur[i].getProvenance() == provenance)
+                return tabJoueur[i];
+        }
+        return null;
+    }
    
     public void melangeCartes(){
         // initialisation des cartes à partir des fichiers .txt
