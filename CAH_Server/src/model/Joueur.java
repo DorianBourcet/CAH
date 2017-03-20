@@ -83,6 +83,10 @@ public class Joueur implements Serializable {
         return this.blanches.remove(bl);
     }
     
+    public void deleteBlanche(int index){
+        this.blanches.remove(index);
+    }
+    
     public int getNombreBlanches(){
         return this.blanches.size();
     }
@@ -92,6 +96,6 @@ public class Joueur implements Serializable {
     }
     
     public String toString(){
-        return ""+this.score;
+        return this.alias+" : "+this.score;
     }
 }
