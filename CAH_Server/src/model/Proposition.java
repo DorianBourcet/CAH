@@ -6,6 +6,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -38,6 +39,15 @@ public class Proposition {
     
     public Boolean ajouterBlanche(Blanche bl){
         return this.blanches.add(bl);
+    }
+    
+    public String toString(){
+        Iterator itr = this.blanches.iterator();
+        String str = "";
+        while(itr.hasNext()){
+            str+=((Blanche)itr.next()).getTexte()+"\n";
+        }
+        return str;
     }
     
 }
