@@ -4,6 +4,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/jycy-branch
             <file>file:/C:/Users/jcf_1/Desktop/CAH/CAH_Server/src/model/Proposition.java</file>
             <file>file:/C:/Users/jcf_1/Desktop/CAH/CAH_Server/src/dao/Cartes.java</file>
             <file>file:/C:/Users/jcf_1/Desktop/CAH/CAH_Server/src/server/MainServer.java</file>
@@ -11,6 +14,7 @@
             <file>file:/C:/Users/jcf_1/Desktop/CAH/CAH_Server/src/model/Partie.java</file>
             <file>file:/C:/Users/jcf_1/Desktop/CAH/CAH_Server/src/model/Joueur.java</file>
             <file>file:/C:/Users/jcf_1/Desktop/CAH/CAH_Server/src/model/Blanche.java</file>
+<<<<<<< HEAD
 =======
             <file>file:/C:/Users/soixa/Documents/GitHub/CardsAgainstHumanity/CAH/CAH_Server/src/Test.java</file>
             <file>file:/C:/Users/soixa/Documents/GitHub/CardsAgainstHumanity/CAH/CAH_Server/src/server/MainServer.java</file>
@@ -19,6 +23,8 @@
             <file>file:/C:/Users/soixa/Documents/GitHub/CardsAgainstHumanity/CAH/CAH_Server/src/model/Joueur.java</file>
             <file>file:/C:/Users/soixa/Documents/GitHub/CardsAgainstHumanity/CAH/CAH_Server/src/model/Noire.java</file>
 >>>>>>> refs/remotes/origin/master
+=======
+>>>>>>> origin/jycy-branch
         </group>
     </open-files>
 </project-private>
