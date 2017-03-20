@@ -9,8 +9,10 @@ import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Blanche;
 import model.Joueur;
 import model.Partie;
 import model.Proposition;
@@ -158,19 +160,19 @@ public class MainServer {
                                     String propositions[];
                                     propositions = msg.split(" ");
                                     for(int y = 0; y <propositions.length;y++){
-                                        propo.ajouterBlanche(partie.getJoueur(provenance).getBlanches().get(Integer.parseInt(propositions[y])));
-                                        partie.getJoueur(provenance).deleteBlanche(Integer.parseInt(propositions[y]));
+                                        propo.ajouterBlanche(partie.getJoueur(provenance).getBlanches().get(Integer.valueOf(propositions[y])-1));
+                                        partie.getJoueur(provenance).deleteBlanche(Integer.valueOf(propositions[y])-1);
                                     }
                                 }else{
-                                    String proposition = msg;
-                                    propo.ajouterBlanche(partie.getJoueur(provenance).getBlanches().get(Integer.parseInt(proposition)));
-                                    partie.getJoueur(provenance).deleteBlanche(Integer.parseInt(proposition));
+                                    String proposition = msg.trim();
+                                    propo.ajouterBlanche(partie.getJoueur(provenance).getBlanches().get(Integer.valueOf(proposition)-1));
+                                    partie.getJoueur(provenance).deleteBlanche(Integer.valueOf(proposition)-1);
                                 }
                                 partie.ajouterProposition(propo);
                                 if(partie.getNbrPropositions()== joueurStart.size()-1){
-                                    this.broadcast("Voici les propositions:\n","Veuillez choisir la meilleure proposition\nÀ l'aide de la commande VOTE <votre_choix>", partie.getCurrentJoueur().getProvenance() );
+                                    this.broadcast("\n\nVoici les propositions:\n\n","\n\nVeuillez choisir la meilleure proposition\nÀ l'aide de la commande VOTE <votre_choix>", partie.getCurrentJoueur().getProvenance() );
                                     for (int y = 0; y <partie.getNbrPropositions();y++){
-                                        this.broadcast((y+1)+": "+partie.getProposition(y).toString()+"\n\n");
+                                        this.broadcast((y+1)+": "+partie.getProposition(y).toString());
                                     }
                                 }
                             }
@@ -178,11 +180,11 @@ public class MainServer {
                         case "VOTE":
                             if(partieCommencer == true){
                                 if(partie.getCurrentJoueur().getProvenance() == provenance && partie.getNbrPropositions()== joueurStart.size()-1){
-                                    partie.getJoueur(partie.getProposition((Integer.parseInt(msg))-1).getIdJoueur()).incrementerScore();
-                                    this.broadcast("La proposition "+msg+" a été choisie, "+partie.getJoueur(partie.getProposition(Integer.parseInt(msg)).getIdJoueur()).getAlias()+" gagne un point!");       
-                                    if (partie.getJoueur(partie.getProposition((Integer.parseInt(msg))-1).getIdJoueur()).getScore()==5) {
+                                    partie.getJoueur(partie.getProposition((Integer.parseInt(msg.trim()))-1).getIdJoueur()).incrementerScore();
+                                    this.broadcast("\n\n\nLa proposition "+msg.trim()+" a été choisie, "+partie.getJoueur(partie.getProposition(Integer.parseInt(msg.trim())-1).getIdJoueur()).getAlias()+" gagne un point!");       
+                                    if (partie.getJoueur(partie.getProposition((Integer.parseInt(msg.trim()))-1).getIdJoueur()).getScore()>=5) {
                                         partieCommencer = false;
-                                        this.broadcast(partie.getJoueur(partie.getProposition((Integer.parseInt(msg))-1).getIdJoueur()).getAlias()+" a gagner");
+                                        this.broadcast(partie.getJoueur(partie.getProposition((Integer.parseInt(msg.trim())-1)).getIdJoueur()).getAlias()+" a gagner");
                                         partie = null;
                                         joueurStart = new ArrayList();
                                         nbrJoueurStart = 0;
@@ -192,9 +194,15 @@ public class MainServer {
                                         partie.nextNoire();
                                         partie.flushPropositions();
                                         Joueur currentJoueur = partie.getCurrentJoueur();
-                                        this.broadcast("C'est vôtre tour pour piger une carte noir!", currentJoueur.getAlias()+" est le prochain joueur à piger une carte noir!", currentJoueur.getProvenance());
-                                        this.broadcast(partie.getCurrentNoire().getTexte());
-                                        this.broadcast("Vous devez selectionner "+partie.getCurrentNoire().getPiger()+" carte(s)","Attente de proposition...",currentJoueur.getProvenance());
+                                        this.broadcast("\n\n"+currentJoueur.getAlias()+" est le prochain joueur à piger une carte noir!","\n\nC'est vôtre tour pour piger une carte noir!", currentJoueur.getProvenance());
+                                        this.broadcast("\n\n"+partie.getCurrentNoire().getTexte());
+                                        this.broadcast("\n\nVous devez selectionner "+partie.getCurrentNoire().getPiger()+" carte(s)\n","\n\nAttente de proposition...",currentJoueur.getProvenance());
+                                        for(int y = 0;y<joueurStart.size();y++){
+                                            if(partie.getCurrentJoueur().getProvenance()!=y){
+                                                String deck = this.afficherListeCarte((ArrayList)partie.getJoueur(y).getBlanches());
+                                                this.envoyer(deck, y);
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -288,18 +296,41 @@ public class MainServer {
         partie.ordreInitiate();
         partie.distribuerCartes();
         //voir getCurrentJoueur pour le retour
+       // System.out.println("avant current joueur");
         Joueur currentJoueur = partie.getCurrentJoueur();
-        this.broadcast("Vous êtes le premier joueur à piger une carte noir!", currentJoueur.getAlias()+" est le premier joueur à piger une carte noir!", currentJoueur.getProvenance());
-        this.broadcast(partie.getCurrentNoire().getTexte());
-        this.broadcast("Vous devez selectionner "+partie.getCurrentNoire().getPiger()+" carte(s)");
+        System.out.println(partie.getCurrentBlanche().getTexte());
+        //System.out.println("Après current joueur");
+        this.broadcast("\n"+currentJoueur.getAlias()+" est le premier joueur à piger une carte noir!", "\nVous êtes le premier joueur à piger une carte noir!", currentJoueur.getProvenance());
+        this.broadcast("\n\n"+partie.getCurrentNoire().getTexte());
+        this.broadcast("\n\nVous devez selectionner "+partie.getCurrentNoire().getPiger()+" carte(s)\n","\n\nAttente de proposition...\n",currentJoueur.getProvenance());
+        for(int y = 0;y<joueurStart.size();y++){
+            if(partie.getCurrentJoueur().getProvenance()!=y){
+                //System.out.println("joueur:"+partie.getJoueur(y));
+                String deck = this.afficherListeCarte((ArrayList)partie.getJoueur(y).getBlanches());
+                this.envoyer(deck, y);
+            }
+        }
+    }
+    private String afficherListeCarte(ArrayList deck){
+       System.out.println(deck);
+       Iterator itr = deck.iterator();
+       
+       int nbrBlanche = 0;
+       String blancheDeck = "";
+       while(itr.hasNext()){
+           nbrBlanche++;
+           Blanche b = (Blanche)itr.next();
+           blancheDeck += "\n"+nbrBlanche+": "+b.getTexte();
+       }
+       return blancheDeck;
     }
     private void broadcast(String message){
-        for (int z = 0; z <= joueurStart.size(); z++) {
+        for (int z = 0; z < joueurStart.size(); z++) {
             this.envoyer(message, z);
         }
     }
     private void broadcast(String messageAll, String messageProvenance, int provenance){
-        for (int z = 0; z <= joueurStart.size(); z++) {
+        for (int z = 0; z < joueurStart.size(); z++) {
             if(provenance== z) this.envoyer(messageProvenance, z);
             else this.envoyer(messageAll, z);
         }

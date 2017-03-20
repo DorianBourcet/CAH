@@ -38,7 +38,6 @@ public class Cartes {
             BufferedReader br = new BufferedReader(isr);
             while ((line = br.readLine())!= null) {
                 Blanche blanche = new Blanche(line);
-                System.out.println(line);
                 listeBlanches.add(blanche);
             }
         } catch (IOException ex) {
@@ -56,7 +55,6 @@ public class Cartes {
             while ((line = br.readLine())!= null) {
                 String[] parts = line.split(";");
                 Noire noire = new Noire(parts[0], Integer.parseInt(parts[1]));
-                System.out.println(line);
                 listeNoires.add(noire);
             }
         } catch (IOException ex) {

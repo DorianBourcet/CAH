@@ -20,7 +20,7 @@ public class Joueur implements Serializable {
     private String alias;
     private int provenance;
     private int score = 0;
-    private ArrayList<Blanche> blanches;
+    private ArrayList<Blanche> blanches = new ArrayList<Blanche>();
 
     public Joueur(String alias, int provenance, int score, ArrayList<Blanche> blanches) {
         this.alias = alias;
@@ -67,7 +67,7 @@ public class Joueur implements Serializable {
         this.score = score;
     }
 
-    public List<Blanche> getBlanches() {
+    public ArrayList<Blanche> getBlanches() {
         return blanches;
     }
 
@@ -75,8 +75,8 @@ public class Joueur implements Serializable {
         this.blanches = blanches;
     }
     
-    public Boolean ajouterBlanche(Blanche bl){
-        return this.blanches.add(bl);
+    public void ajouterBlanche(Blanche bl){
+        blanches.add(bl);
     }
     
     public Boolean deleteBlanche(Blanche bl){
