@@ -133,4 +133,8 @@ public class Partie {
         return (Joueur)stackTourJoueur.peek();
     }
     
+    public ArrayList getPropositions(){
+        return propositions;
+    }
+    
 }
