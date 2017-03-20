@@ -172,13 +172,13 @@ public class MainServer {
                                     String propositions[];
                                     propositions = msg.split(" ");
                                     for(int y = 0; y <propositions.length;y++){
-                                        propo.ajouterBlanche(partie.getJoueur(provenance).getBlanches().get(propositions[y]));
-                                        partie.getJoueur(provenance).deleteBlanche(propositions[y]);
+                                        propo.ajouterBlanche(partie.getJoueur(provenance).getBlanches().get(Integer.parseInt(propositions[y])));
+                                        partie.getJoueur(provenance).deleteBlanche(Integer.parseInt(propositions[y]));
                                     }
                                 }else{
                                     String proposition = msg;
-                                    propo.ajouterBlanche(partie.getJoueur(provenance).getBlanches().get(proposition));
-                                    partie.getJoueur(provenance).deleteBlanche(proposition);
+                                    propo.ajouterBlanche(partie.getJoueur(provenance).getBlanches().get(Integer.parseInt(proposition)));
+                                    partie.getJoueur(provenance).deleteBlanche(Integer.parseInt(proposition));
                                 }
                                 partie.ajouterProposition(propo);
                                 if(partie.getNbrPropositions()== joueurStart.size()-1){
@@ -193,7 +193,7 @@ public class MainServer {
                             if(partieCommencer == true){
                                 if(partie.getCurrentJoueur().getProvenance() == provenance && partie.getNbrPropositions()== joueurStart.size()-1){
                                     partie.getJoueur(partie.getProposition((Integer.parseInt(msg))-1).getIdJoueur()).incrementerScore();
-                                    this.broadcast("La proposition "+msg+" a été choisie, "+getJoueur(partie.getProposition(Integer.parseInt(msg)).getIdJoueur()).getAlias()+" gagne un point!");
+                                    this.broadcast("La proposition "+msg+" a été choisie, "+partie.getJoueur(partie.getProposition(Integer.parseInt(msg)).getIdJoueur()).getAlias()+" gagne un point!");
                                     partie.pigerCartes();
                                     partie.nextJoueur();
                                     partie.nextNoire();
