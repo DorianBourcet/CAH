@@ -160,8 +160,8 @@ public class MainServer {
                                     String propositions[];
                                     propositions = msg.split(" ");
                                     for(int y = 0; y <propositions.length;y++){
-                                        propo.ajouterBlanche(partie.getJoueur(provenance).getBlanches().get(Integer.valueOf(propositions[y])-1));
-                                        partie.getJoueur(provenance).deleteBlanche(Integer.valueOf(propositions[y])-1);
+                                        propo.ajouterBlanche(partie.getJoueur(provenance).getBlanches().get(Integer.valueOf(propositions[y].trim())-1));
+                                        partie.getJoueur(provenance).deleteBlanche(Integer.valueOf(propositions[y].trim())-1);
                                     }
                                 }else{
                                     String proposition = msg.trim();
@@ -190,7 +190,9 @@ public class MainServer {
                                         nbrJoueurStart = 0;
                                     }else{
                                         partie.pigerCartes();
-                                        partie.nextJoueur();
+                                        if (!partie.nextJoueur()){
+                                            partie.reinitBeginningStack();
+                                        }
                                         partie.nextNoire();
                                         partie.flushPropositions();
                                         Joueur currentJoueur = partie.getCurrentJoueur();

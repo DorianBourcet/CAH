@@ -22,6 +22,7 @@ public class Partie {
     private Stack stackNoire = new Stack();
     private Stack stackBlanche = new Stack();
     private Stack stackTourJoueur = new Stack();
+    private Stack secondStackJoueur = new Stack();
     private ArrayList propositions = new ArrayList();
     private int nbCartesParJoueur;
 
@@ -125,8 +126,16 @@ public class Partie {
     public Proposition getProposition(int i){
         return (Proposition)propositions.get(i);
     }
-    public void nextJoueur(){
-        stackTourJoueur.push(stackTourJoueur.pop());
+    public boolean nextJoueur(){
+        secondStackJoueur.push(stackTourJoueur.pop());
+        if (stackTourJoueur.empty())
+            return false;
+        return true;
+    }
+    public void reinitBeginningStack(){
+        while(!secondStackJoueur.empty()){
+            stackTourJoueur.push(secondStackJoueur.pop());
+        }
     }
     public Joueur getCurrentJoueur(){
         /*for (int i=0;i<tabJoueur.length;i++){
