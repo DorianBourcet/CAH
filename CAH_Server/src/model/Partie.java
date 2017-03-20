@@ -23,12 +23,13 @@ public class Partie {
     private Stack stackBlanche = new Stack();
     private Stack stackTourJoueur = new Stack();
     private ArrayList propositions = new ArrayList();
-    private int nbCartesParJoueur = 10;
+    private int nbCartesParJoueur;
 
     
     //Crée une partie avec le nombre de joueur
     public Partie(int nbrJoueur) {
         tabJoueur = new Joueur[nbrJoueur];
+        nbCartesParJoueur = 10;
     }
     
     public void setJoueurs(HashMap liste){
@@ -69,12 +70,11 @@ public class Partie {
     }
     
     public void distribuerCartes(){
-        // distribue les cartes au début d'une partie
-        // 10 cartes par joueur si le nombre de cartes disponibles
-        // est supérieur ou égal au nombre de joueurs *10
-        if (tabJoueur.length*10>Cartes.listeBlanches.size()){
-            nbCartesParJoueur = (int)Math.floor(Cartes.listeBlanches.size()/tabJoueur.length);
+        
+        if ((tabJoueur.length*10)>stackBlanche.size()){
+            nbCartesParJoueur = (int)Math.floor(stackBlanche.size()/tabJoueur.length);
         }
+        
         for(int i=0; i<tabJoueur.length;i++){
             for(int j=0; j<nbCartesParJoueur;j++){
                 tabJoueur[i].ajouterBlanche((Blanche)stackBlanche.pop());
@@ -86,6 +86,9 @@ public class Partie {
     }
     public Noire getCurrentNoire(){
         return (Noire)stackNoire.peek();
+    }
+    public Blanche getCurrentBlanche(){
+        return (Blanche)stackBlanche.peek();
     }
     
     public void pigerCartes(){
@@ -101,7 +104,7 @@ public class Partie {
     public void ordreInitiate(){
         List shadowListJoueur = new ArrayList();
         for (int i=0;i<tabJoueur.length;i++){
-            shadowListJoueur.add(tabJoueur[i].getProvenance());
+            shadowListJoueur.add(tabJoueur[i]);
         }
         do{
             int randomJoueur = (int)(Math.random()* shadowListJoueur.size());
