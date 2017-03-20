@@ -11,10 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Blanche;
-//============================== Peut-etre pas necessaire
 import model.Joueur;
-//==============================
 import model.Partie;
 import model.Proposition;
 
@@ -25,17 +22,12 @@ import model.Proposition;
 public class MainServer {
     private ServerSocket serveurSock;
     private int port;
-    //private final int maxConnexions = 100;
-    //private Socket[] connexions = new Socket[maxConnexions];
     private ArrayList connexions = new ArrayList();
     private int nbConnexions = -1;
     private HashMap listeAlias = new HashMap();
     private ArrayList joueurStart = new ArrayList();
     private int nbrJoueurStart = 0;
-    
-    //private PrintWriter[] os = new PrintWriter[maxConnexions];
     private ArrayList os = new ArrayList();
-    //private BufferedInputStream[] is = new BufferedInputStream[maxConnexions];
     private ArrayList is = new ArrayList();
     private VerifierServeur vt;
     
@@ -127,13 +119,7 @@ public class MainServer {
             System.out.println(e);
         }
     }
-    /*public boolean verifyListStartJoueur(int provenance){
-        if (nbrJoueurStart==0) return false;
-        for (int l = 0; l <= nbrJoueurStart; l++) {
-            if (joueurStart[l] == provenance) return true;
-        }
-        return false;
-    }*/
+
     public void lire() {
         try {
             //buffer de lecture
@@ -193,15 +179,23 @@ public class MainServer {
                             if(partieCommencer == true){
                                 if(partie.getCurrentJoueur().getProvenance() == provenance && partie.getNbrPropositions()== joueurStart.size()-1){
                                     partie.getJoueur(partie.getProposition((Integer.parseInt(msg))-1).getIdJoueur()).incrementerScore();
-                                    this.broadcast("La proposition "+msg+" a été choisie, "+partie.getJoueur(partie.getProposition(Integer.parseInt(msg)).getIdJoueur()).getAlias()+" gagne un point!");
-                                    partie.pigerCartes();
-                                    partie.nextJoueur();
-                                    partie.nextNoire();
-                                    partie.flushPropositions();
-                                    Joueur currentJoueur = partie.getCurrentJoueur();
-                                    this.broadcast("C'est vôtre tour pour piger une carte noir!", currentJoueur.getAlias()+" est le prochain joueur à piger une carte noir!", currentJoueur.getProvenance());
-                                    this.broadcast(partie.getCurrentNoire().getTexte());
-                                    this.broadcast("Vous devez selectionner "+partie.getCurrentNoire().getPiger()+" carte(s)","Attente de proposition...",currentJoueur.getProvenance());
+                                    this.broadcast("La proposition "+msg+" a été choisie, "+partie.getJoueur(partie.getProposition(Integer.parseInt(msg)).getIdJoueur()).getAlias()+" gagne un point!");       
+                                    if (partie.getJoueur(partie.getProposition((Integer.parseInt(msg))-1).getIdJoueur()).getScore()==5) {
+                                        partieCommencer = false;
+                                        this.broadcast(partie.getJoueur(partie.getProposition((Integer.parseInt(msg))-1).getIdJoueur()).getAlias()+" a gagner");
+                                        partie = null;
+                                        joueurStart = new ArrayList();
+                                        nbrJoueurStart = 0;
+                                    }else{
+                                        partie.pigerCartes();
+                                        partie.nextJoueur();
+                                        partie.nextNoire();
+                                        partie.flushPropositions();
+                                        Joueur currentJoueur = partie.getCurrentJoueur();
+                                        this.broadcast("C'est vôtre tour pour piger une carte noir!", currentJoueur.getAlias()+" est le prochain joueur à piger une carte noir!", currentJoueur.getProvenance());
+                                        this.broadcast(partie.getCurrentNoire().getTexte());
+                                        this.broadcast("Vous devez selectionner "+partie.getCurrentNoire().getPiger()+" carte(s)","Attente de proposition...",currentJoueur.getProvenance());
+                                    }
                                 }
                             }
                             break;
@@ -224,9 +218,6 @@ public class MainServer {
                                     } else {
                                         this.envoyer("Demande de confirmation des autres joueurs...", provenance);
                                     }
-                                    /*for (int k = 0; k <= nbrJoueurStart; k++) {
-                                        if (joueurStart[k] == 0) joueurStart[k] = provenance;
-                                    }*/
                                 }
                                 for (int z = 0; z <= nbConnexions; z++) {
                                     if (z != provenance) {
@@ -247,10 +238,6 @@ public class MainServer {
                             break;
                         case "STOP":
                             try {
-                                /*for (int z = 0; z <= nbrJoueurStart; z++) {
-                                    if (joueurStart[nbrJoueurStart] == provenance) joueurStart[nbrJoueurStart] = 0;
-                                    nbrJoueurStart--;
-                                }*/
                                 ((BufferedInputStream)is.get(provenance)).close();
                                 ((PrintWriter)os.get(provenance)).close();
                                 ((Socket)connexions.get(provenance)).close();
@@ -296,9 +283,7 @@ public class MainServer {
     private void initiatePartie() {
         partieCommencer = true;
         partie = new Partie(joueurStart.size());
-        //TODO Méthode pour inséré les joueurs de la room dans la partie
-        //idée 1: Une boucle for qui met les joueurs un par un avec une methode setJoueur(Joueur player)
-        //idée 2: une méthode qui prend un tableau de joueur et qui set les joueurs de la room à la partie avec un méthode setJoueurs(Joueur[] ou arraylist)
+        partie.setJoueurs(listeAlias);
         partie.melangeCartes();
         partie.ordreInitiate();
         partie.distribuerCartes();
