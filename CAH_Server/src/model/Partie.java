@@ -7,7 +7,10 @@ package model;
 
 import dao.Cartes;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -26,6 +29,24 @@ public class Partie {
     //Crée une partie avec le nombre de joueur
     public Partie(int nbrJoueur) {
         tabJoueur = new Joueur[nbrJoueur];
+    }
+    
+    public void setJoueurs(HashMap liste){
+        Iterator itr = liste.entrySet().iterator();
+        int i = 0;
+        while (itr.hasNext()){
+            Map.Entry data = (Map.Entry)itr.next();
+            tabJoueur[i] = new Joueur((String)data.getValue(),(int)data.getKey());
+            i++;
+        }
+    }
+    
+    public Joueur getJoueur(int provenance){
+        for (int i=0;i<tabJoueur.length;i++){
+            if (tabJoueur[i].getProvenance() == provenance)
+                return tabJoueur[i];
+        }
+        return null;
     }
    
     public void melangeCartes(){
@@ -111,8 +132,9 @@ public class Partie {
         //Peut-etre juste retourné le nom du joueur au lieu de l'objet joueur??
         return (Joueur)stackTourJoueur.peek();
     }
-    public void setJoueur(){
-        //TODO Prend les joueur de la room et l'insère dans la partie
+    
+    public ArrayList getPropositions(){
+        return propositions;
     }
     
 }
